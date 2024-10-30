@@ -6,4 +6,5 @@ target '$1' do\n
 \tpod 'YYText'\n
 end\n
 "
-echo  $CONTENT > ./$1/Podfile
+echo  $CONTENT > $2/$1/Podfile
+

@@ -2,18 +2,21 @@ require 'xcodeproj'
 require 'fileutils'
 require 'digest'
 
-DIR = File.dirname(__FILE__)
+
 NAME = ARGV.at(0);
 BUNDLEID = ARGV.at(1);
+DIR = ARGV.at(2);
 
 def createProj()
-    FileUtils.mkdir_p("#{NAME}");
+    # 创建指定目录
+    project_dir = "#{DIR}/#{NAME}"
+    FileUtils.mkdir_p(project_dir);
     # 创建Example.xcodeproj工程文件，并保存
-    Xcodeproj::Project.new("./#{NAME}/#{NAME}.xcodeproj").save
+    Xcodeproj::Project.new("#{project_dir}/#{NAME}.xcodeproj").save
     # 打开创建的Example.xcodeproj文件
-    proj = Xcodeproj::Project.open("./#{NAME}/#{NAME}.xcodeproj")
+    proj = Xcodeproj::Project.open("#{project_dir}/#{NAME}.xcodeproj")
     # 创建一个分组，名称为Example，对应的路径为./Example
-    group = proj.main_group.new_group("#{NAME}", "./#{NAME}")
+    group = proj.main_group.new_group("#{NAME}", "#{project_dir}/#{NAME}")
     # 文件
     filesInTarget = Array[
         "AppDelegate.swift",
