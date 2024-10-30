@@ -1,4 +1,3 @@
-#参考 https://www.cnblogs.com/hello-LJ/p/4515641.html
 require 'xcodeproj'
 require 'fileutils'
 require 'digest'
@@ -18,7 +17,6 @@ def createProj()
     # 文件
     filesInTarget = Array[
         "AppDelegate.swift",
-        "SceneDelegate.swift",
         "ViewController.swift",
         "Base.lproj/LaunchScreen.storyboard",
         "Base.lproj/Main.storyboard",
