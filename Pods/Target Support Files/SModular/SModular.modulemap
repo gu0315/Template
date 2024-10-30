@@ -1,0 +1,6 @@
+framework module SModular {
+  umbrella header "SModular-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,16 @@
+PODS:
+  - SModular (0.0.7)
+
+DEPENDENCIES:
+  - SModular
+
+SPEC REPOS:
+  trunk:
+    - SModular
+
+SPEC CHECKSUMS:
+  SModular: 7574527eabe33e18bebef8b893fd99ffc4397da9
+
+PODFILE CHECKSUM: c919bb9ca37a2d377e62f4e6f9a8b8625fcfe514
+
+COCOAPODS: 1.11.3
