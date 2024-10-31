@@ -23,24 +23,25 @@ def createProj()
         "ViewController.swift",
         "Base.lproj/LaunchScreen.storyboard",
         "Base.lproj/Main.storyboard",
-        "Assets.xcassets"
+        "Assets.xcassets",
+        "#{NAME}-Bridging-Header.h"
     ];
     # 创建target，主要的参数 type: application :dynamic_library framework :static_library 意思大家都懂的
     target = proj.new_target(:application, "#{NAME}", :ios)
-    sourceFiles = Array.new
-    # 将bundle加入到copy resources中
-    for fr in filesInTarget.map { |f| group.new_reference(f) } do
-        #.bundle文件需要加入到 Build Phases - Copy Resource Bundle中
-        #.h文件需要加入到 Build Phase - Headers中
-        if fr.path.include?(".bundle") || fr.path.include?(".storyboard") || fr.path.include?(".xcassets") then
-            if not target.resources_build_phase.include?(fr) then
+    sourceFiles = []
+    # 将文件加入到target中
+    filesInTarget.each do |file|
+        fr = group.new_reference(file)
+        
+        if fr.path.include?(".bundle") || fr.path.include?(".storyboard") || fr.path.include?(".xcassets")
+            unless target.resources_build_phase.include?(fr)
                 build_file = proj.new(Xcodeproj::Project::Object::PBXBuildFile)
                 build_file.file_ref = fr
                 target.resources_build_phase.files << build_file
             end
-        elsif fr.path.include?(".h") then
+        elsif fr.path.include?(".h") || fr.path.include?("-Bridging-Header.h")
             headerPhase = target.headers_build_phase
-            unless build_file = headerPhase.build_file(fr)
+            unless headerPhase.build_file(fr)
                 build_file = proj.new(Xcodeproj::Project::Object::PBXBuildFile)
                 build_file.file_ref = fr
                 build_file.settings = { 'ATTRIBUTES' => ['Public'] }
@@ -50,6 +51,7 @@ def createProj()
             sourceFiles << fr
         end
     end
+    
     group.new_reference("Info.plist");
     # target添加相关的文件引用，这样编译的时候才能引用到
     target.add_file_references(sourceFiles)
@@ -63,6 +65,7 @@ def createProj()
     target.build_configuration_list.set_setting("SWIFT_VERSION", "5.0");
     target.build_configuration_list.set_setting("MARKETING_VERSION", "1.0");
     target.build_configuration_list.set_setting("PRODUCT_BUNDLE_IDENTIFIER", "#{BUNDLEID}");
+    target.build_configuration_list.set_setting('SWIFT_OBJC_BRIDGING_HEADER', "$(SRCROOT)/#{NAME}-Bridging-Header.h")
 
     #recreate schemes
     proj.recreate_user_schemes(visible = true)
